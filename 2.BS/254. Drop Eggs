@@ -1,0 +1,49 @@
+1) 最优子结构
+
+当我们从一个楼层x扔下鸡蛋时，有可能出现两种情况（1）鸡蛋破（2）鸡蛋不破。
+
+1）鸡蛋破，那么我们只需要用剩下的鸡蛋测试 x层以下的楼层; 所以问题简化为x-1层和n-1个鸡蛋
+2）如果鸡蛋没有破，那么我们只需要检查比x较高的楼层; 所以问题简化为 k-x 和n个鸡蛋。
+
+
+https://leetcode.com/problems/super-egg-drop/solution/
+https://blog.csdn.net/u013457382/article/details/49035821
+
+class Solution {
+    public int superEggDrop(int K, int N) {
+        return dp(K, N);
+    }
+
+    Map<Integer, Integer> memo = new HashMap();
+    public int dp(int K, int N) {
+        if (!memo.containsKey(N * 100 + K)) {
+            int ans;
+            if (N == 0)
+                ans = 0;
+            else if (K == 1)
+                ans = N;
+            else {
+                int lo = 1, hi = N;
+                while (lo + 1 < hi) {
+                    int x = (lo + hi) / 2;
+                    int t1 = dp(K-1, x-1);
+                    int t2 = dp(K, N-x);
+
+                    if (t1 < t2)
+                        lo = x;
+                    else if (t1 > t2)
+                        hi = x;
+                    else
+                        lo = hi = x;
+                }
+
+                ans = 1 + Math.min(Math.max(dp(K-1, lo-1), dp(K, N-lo)),
+                                   Math.max(dp(K-1, hi-1), dp(K, N-hi)));
+            }
+
+            memo.put(N * 100 + K, ans);
+        }
+
+        return memo.get(N * 100 + K);
+    }
+}

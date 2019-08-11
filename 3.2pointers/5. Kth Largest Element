@@ -1,0 +1,19 @@
+https://leetcode.com/problems/kth-largest-element-in-an-array/
+
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        return quickSort(nums, 0, nums.length - 1, k);
+    }
+    private int quickSort(int[] nums, int i, int j, int k) {
+        int pivot = nums[i], left = i, right = j;
+        while(i < j) {
+            while(i < j && nums[j] <= pivot) j--;
+            if(i < j) nums[i++] = nums[j];
+            while(i < j && nums[i] >= pivot) i++;
+            if(i < j) nums[j--] = nums[i];
+        }
+        if(i == k - 1) return pivot;
+        else if(i < k - 1) return quickSort(nums, i + 1, right, k);
+        return quickSort(nums, left, i - 1, k);
+    }
+}

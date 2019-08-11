@@ -1,0 +1,41 @@
+https://www.cnblogs.com/grandyang/p/6854825.html
+https://zhengyang2015.gitbooks.io/lintcode/copy_books_437.html
+public class Solution {
+    /**
+     * @param pages: an array of integers
+     * @param k: an integer
+     * @return: an integer
+     */
+    public int copyBooks(int[] pages, int k) {
+        // write your code here
+        //O(n*logM)? O(n*k)
+        int l = 0;
+        int r = 9999999;
+        while( l <= r){
+            int mid = l + (r - l) / 2;
+            if(search(mid,pages,k))
+                r = mid-1;
+            else
+                l = mid+1;
+        }
+        return l;
+    }
+
+    private boolean search(int total, int[] page, int k){
+    //至少有一个人copy，所以count从1开始
+        int count = 1;
+        int sum = 0;
+        for(int i = 0; i < page.length;) {
+            if(sum + page[i] <= total){
+                sum += page[i++];
+            }else if(page[i] <= total){
+                sum = 0;
+                count++;
+            }else{
+                return false;
+            }
+        }
+
+        return count <= k;
+    }
+}
